@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <style>
+      * {
+        font-weight: lighter;
+        font-family: Arial;
+        border-radius: 10px;
+        min-width: fit-content;
+        font-size: 16pt;
+      }
+
+      h1 {
+        padding: 10px;
+        margin: 10px;
+        font-weight: normal;
+        font-size: 22pt;
+      }
+
+      h2 {
+        padding: 10px;
+        margin: 10px;
+        font-weight: normal;
+        font-size: 20pt;
+      }
+
+      h3 {
+        padding: 10px;
+        margin: 10px;
+        font-weight: normal;
+        font-size: 18pt;
+      }
+
+      input {
+        padding: 10px;
+        margin: 10px;
+        border: 2px solid #b1b1b1;
+      }
+
+      button {
+        padding: 10px;
+        margin: 10px;
+        border: none;
+        padding-left: 45px;
+        padding-right: 45px;
+        color: #ffffff;
+      }
+
+      textarea {
+        height: fit-content;
+        width: fit-content;
+        min-width: 50px;
+        min-height: 100px;
+        max-width: 500px;
+        max-height: 700px;
+        padding: 10px;
+        margin: 10px;
+        background-color: #ffffff;
+        transition: width 0.3s ease, height 0.3s ease;
+      }
+
+      button:hover {
+        cursor: pointer;
+      }
+
+      .flex_column {
+        height: auto;
+        width: fit-content;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .boxShadow {
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .primary-color {
+        background-color: #8b00fd;
+      }
+
+      .card {
+        height: fit-content;
+        background-color: #ffffffab;
+        width: fit-content;
+        max-width: 200px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+
+    <div class="card">
+      <h1>Api Tester</h1>
+      <div class="flex_column">
+        <form class="flex_column">
+          <input
+            id="inputField"
+            class="boxShadow"
+            type="text"
+            placeholder="Input Api Url"
+          />
+          <button
+            id="testButton"
+            onclick="fetchData()"
+            class="boxShadow primary-color"
+          >
+            Ok
+          </button>
+        </form>
+
+        <textarea
+          id="textArea"
+          disabled
+          placeholder="Api Response..."
+        ></textarea>
+      </div>
+    </div>
+
+    <script>
+      async function fetchData() {
+        event.preventDefault();
+        const inputVal = document.getElementById("inputField").value;
+        const textArea = document.getElementById("textArea");
+
+        try {
+          const response = await fetch(inputVal);
+          if (!response.ok) {
+            textArea.value = "Network response was not ok...";
+            throw new Error("Network response was not ok...");
+          }
+          const json = await response.json();
+          setTextBox(textArea, json);
+        } catch (error) {
+          textArea.value = "Error Processing your request...";
+          console.log(error);
+        }
+      }
+
+      const setTextBox = (textArea, json) => {
+        const jsonDataLength = JSON.stringify(json).length;
+        textArea.value = JSON.stringify(json, null, 2);
+
+        const newSize = Math.max(200, jsonDataLength);
+        textArea.style.width = `${newSize}px`;
+        textArea.style.height = `${newSize}px`;
+      };
+    </script>
+  </body>
+</html>
